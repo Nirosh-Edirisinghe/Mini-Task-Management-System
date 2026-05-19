@@ -21,7 +21,7 @@ const Dashboard = () => {
         {/* Right Side */}
         <button
           onClick={() => setOpen(true)}
-          className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700"
+          className="bg-emerald-400 text-white px-4 py-2 rounded-lg hover:bg-emerald-500"
         >
           + Add Task
         </button>
