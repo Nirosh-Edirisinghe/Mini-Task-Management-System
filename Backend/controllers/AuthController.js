@@ -45,7 +45,15 @@ const registerUser = async (req, res) => {
     const user = await newUser.save()
     const token = generateToken(user._id, user.role)
 
-    res.json({ success: true, token })
+    res.json({
+      success: true,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token,
+      token
+    })
 
   } catch (error) {
     console.log(error);
@@ -67,7 +75,15 @@ const loginUser = async (req, res) => {
 
     if (isMatch) {
       const token = generateToken(user._id, user.role)
-      res.json({ success: true, token })
+      res.json({
+        success: true,
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        token,
+        token
+      })
     } else {
       res.status(401).json({ success: false, message: "Invalid credential" })
     }
@@ -78,4 +94,4 @@ const loginUser = async (req, res) => {
   }
 }
 
-export {registerUser, loginUser}
+export { registerUser, loginUser }
