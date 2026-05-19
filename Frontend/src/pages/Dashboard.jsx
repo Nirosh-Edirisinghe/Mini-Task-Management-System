@@ -3,9 +3,9 @@ import AddTask from '../components/AddTask';
 import { AppContext } from '../context/AppContext.jsx';
 
 const Dashboard = () => {
-  const {token} = useContext(AppContext)
-  const [open, setOpen] = useState(false);
-  
+  const { token} = useContext(AppContext)
+  const [open, setOpen] = useState(false);  
+
   return (
     <div className='flex flex-col h-scree'>
       {/* Header */}
@@ -30,7 +30,7 @@ const Dashboard = () => {
       {/* Modal */}
       {open && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40">
-          <AddTask setOpen={setOpen}/>         
+          <AddTask setOpen={setOpen} />
         </div>
       )}
 

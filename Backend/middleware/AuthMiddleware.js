@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
+import userModel from "../models/user.js";
 
-export const Authuser = (req, res, next) => {
+export const Authuser = async (req, res, next) => {
 
   const authHeader = req.headers.authorization;
 
@@ -10,11 +11,11 @@ export const Authuser = (req, res, next) => {
       message: "Unauthorized Login Again !",
     });
   }
-  const token = authHeader.split(" ")[1];
+  const token = authHeader.split(" ")[1];  
 
   try {
     const token_decode = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(token_decode.id).select("-password");
+    req.user = await userModel.findById(token_decode.id).select("-password");
     next();
 
   } catch (error) {
