@@ -1,44 +1,325 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { AppContext } from '../context/AppContext.jsx';
+import axios from "axios"
+import { ChevronDown, X } from "lucide-react";
+import { Listbox } from "@headlessui/react";
 
-const AddTask = ({setOpen}) => {
+const priorities = ["LOW", "MEDIUM", "HIGH"];
+const statusList = ["TODO", "IN_PROGRESS", "DONE"];
 
+const AddTask = ({ setOpen }) => {
+
+  const { backendUrl, token, users } = useContext(AppContext);
   const [task, setTask] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    priority: "MEDIUM",
+    status: "TODO",
+    dueDate: "",
+    assignedTo: "",
+  });
 
-  const handleAddTask = () => {
-    console.log("New Task:", task);
-    setTask("");
-    setOpen(false);
+  // Handle Input Change
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Add Task
+  const handleAddTask = async () => {
+    console.log(formData);
+    
+
+    try {
+
+      const { data } = await axios.post(
+        `${backendUrl}/api/task/create-task`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        alert("Task Added Successfully");
+        setOpen(false);
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div>
-      <div className="bg-white w-96 rounded-xl p-6 shadow-lg">
+      <div className="bg-white w-125 max-h-[90vh] rounded-2xl py-4 pl-4 pr-2 shadow-xl overflow-hidden">
 
-        <h2 className="text-lg font-bold mb-4">Add New Task</h2>
+        <div className="overflow-y-auto max-h-[80vh] p-2">
 
-        <input
-          type="text"
-          value={task}
-          onChange={(e) => setTask(e.target.value)}
-          placeholder="Enter task..."
-          className="w-full border rounded-lg p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-        />
+          {/* Header */}
+          <div className="mb-3">
+            <h2 className="text-2xl font-bold text-slate-800">
+              Add New Task
+            </h2>
 
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={() => setOpen(false)}
-            className="px-3 py-2 rounded-lg bg-slate-200 hover:bg-slate-300"
-          >
-            Cancel
-          </button>
+            <p className="text-sm text-slate-500 mt-1">
+              Create and assign a task to your team member.
+            </p>
+          </div>
 
-          <button
-            onClick={handleAddTask}
-            className="px-3 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
-          >
-            Save
-          </button>
+          {/* Title */}
+          <div className="mb-3">
+            <label className="text-sm font-medium text-slate-700">
+              Task Title
+            </label>
+
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="Enter task title"
+              className="w-full mt-1 border border-slate-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+            />
+          </div>
+
+          {/* Description */}
+          <div className="mb-3">
+            <label className="text-sm font-medium text-slate-700">
+              Description
+            </label>
+
+            <textarea
+              rows="2"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Enter task description"
+              className="w-full mt-1 border border-slate-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+            />
+          </div>
+
+          {/* Priority + Status */}
+          <div className="grid grid-cols-2 gap-4 mb-3">
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-slate-700">
+                Priority
+              </label>
+
+              <Listbox
+                value={formData.priority}
+                onChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    priority: value,
+                  })
+                }
+              >
+                {({ open }) => (
+                  <div className="relative">
+
+                    {/* Button */}
+                    <Listbox.Button className="w-full border border-gray-300 focus:outline-none     focus:ring-1 focus:ring-emerald-100 rounded-md px-3 py-2 text-left flex items-center justify-between text-slate-600 bg-white"
+                    >
+                      <span className="capitalize">
+                        {formData.priority.toLowerCase()}
+                      </span>
+
+                      <ChevronDown
+                        size={18}
+                        className={`stroke-gray-500 transition-transform ${open ? "rotate-180" : ""}`}
+                      />
+                    </Listbox.Button>
+
+                    {/* Options */}
+                    <Listbox.Options
+                      className="absolute mt-1 w-full border border-gray-300 bg-white shadow-lg rounded-md z-10 overflow-hidden"
+                    >
+                      {priorities.map((priority) => (
+                        <Listbox.Option
+                          key={priority}
+                          value={priority}
+                          className={({ active }) =>
+                            `cursor-pointer px-3 py-1 capitalize transition ${active
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "text-gray-700"}`
+                          }
+                        >
+                          {priority.toLowerCase()}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+
+                  </div>
+                )}
+              </Listbox>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-slate-700">
+                Status
+              </label>
+
+              <Listbox
+                value={formData.status}
+                onChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    status: value,
+                  })
+                }
+              >
+                {({ open }) => (
+                  <div className="relative">
+
+                    {/* Button */}
+                    <Listbox.Button
+                      className="w-full border border-gray-300 focus:outline-none      focus:ring-1 focus:ring-emerald-100 rounded-md px-3 py-2 text-left flex items-center justify-between text-slate-600 bg-white"
+                    >
+                      <span className="capitalize">
+                        {formData.status.replace("_", " ").toLowerCase()}
+                      </span>
+
+                      <ChevronDown
+                        size={18}
+                        className={`stroke-gray-500 transition-transform ${open ? "rotate-180" : ""}`}
+                      />
+                    </Listbox.Button>
+
+                    {/* Options */}
+                    <Listbox.Options
+                      className="absolute mt-1 w-full border border-gray-300 bg-white shadow-lg rounded-md z-10 overflow-hidden"
+                    >
+                      {statusList.map((status) => (
+                        <Listbox.Option
+                          key={status}
+                          value={status}
+                          className={({ active }) =>
+                            `cursor-pointer px-3 py-1 capitalize transition ${active
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "text-gray-700"}`
+                          }
+                        >
+                          {status.replace("_", " ").toLowerCase()}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+
+                  </div>
+                )}
+              </Listbox>
+            </div>
+
+          </div>
+
+          {/* Due Date */}
+          <div className="mb-3">
+            <label className="text-sm font-medium text-slate-700">
+              Due Date
+            </label>
+
+            <input
+              type="date"
+              name="dueDate"
+              value={formData.dueDate}
+              onChange={handleChange}
+              className="w-full mt-1 border border-slate-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          {/* Assign User */}
+          <div className="mb-3">
+            <label className="block text-sm font-medium mb-1 text-slate-700">
+              Assign To
+            </label>
+
+            <Listbox
+              value={formData.assignedTo}
+              onChange={(value) =>
+                setFormData({
+                  ...formData,
+                  assignedTo: value,
+                })
+              }
+            >
+              {({ open }) => {
+
+                const selectedUser = users.find(
+                  (user) => user._id === formData.assignedTo
+                );
+
+                return (
+                  <div className="relative">
+
+                    {/* Button */}
+                    <Listbox.Button
+                      className="w-full border border-gray-300 focus:outline-none      focus:ring-1 focus:ring-emerald-100 rounded-md px-3 py-2 text-left flex items-center justify-between text-slate-600 bg-white"
+                    >
+                      <span>
+                        {selectedUser
+                          ? selectedUser.name
+                          : "Select User"}
+                      </span>
+
+                      <ChevronDown
+                        size={18}
+                        className={`stroke-gray-500 transition-transform ${open ? "rotate-180" : ""}`}
+                      />
+                    </Listbox.Button>
+
+                    {/* Options */}
+                    <Listbox.Options
+                      className="absolute mt-1 w-full border border-gray-300 bg-white shadow-lg rounded-md z-10 overflow-hidden max-h-60 overflow-y-auto"
+                    >
+                      {users.map((user) => (
+                        <Listbox.Option
+                          key={user._id}
+                          value={user._id}
+                          className={({ active }) =>
+                            `cursor-pointer px-3 py-1 transition ${active
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "text-gray-700"}`
+                          }
+                        >
+                          {user.name}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+
+                  </div>
+                );
+              }}
+            </Listbox>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex justify-between gap-2">
+
+            <button
+              onClick={() => setOpen(false)}
+              className="px-4 py-2 w-[50%] rounded-lg bg-slate-300 hover:bg-slate-400 cursor-pointer"
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={handleAddTask}
+              className="px-4 py-2 w-[50%] rounded-lg bg-emerald-400 text-white hover:bg-emerald-500 cursor-pointer"
+            >
+              Add Task
+            </button>
+
+          </div>
+
         </div>
+
+
 
       </div>
     </div>

@@ -29,7 +29,7 @@ const Dashboard = () => {
 
       {/* Modal */}
       {open && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40">
+        <div className="fixed inset-0  flex items-center justify-center bg-black/40 z-50">
           <AddTask setOpen={setOpen} />
         </div>
       )}
