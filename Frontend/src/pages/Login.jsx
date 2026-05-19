@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"
 import { Eye, EyeOff } from "lucide-react";
+import { AppContext } from '../context/AppContext.jsx';
 
 const Login = () => {
 
+  const {backendUrl} = useContext(AppContext)
   const [mode, setMode] = useState("login"); // login | register
   const [isAdmin, setIsAdmin] = useState(false);
   const [showPassword, setShowPassword] = useState(false)
-  const backendUrl = import.meta.env.VITE_BACKEND_URL
+  
 
   const [form, setForm] = useState({
     name: "",
