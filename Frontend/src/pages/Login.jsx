@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios"
 import { Eye, EyeOff } from "lucide-react";
 import { AppContext } from '../context/AppContext.jsx';
+import { toast } from 'react-toastify';
 
 const Login = () => {
 
@@ -40,6 +41,7 @@ const Login = () => {
         if (data && data.token) {
           // store full user (BEST PRACTICE)
           localStorage.setItem("user", JSON.stringify(data));
+          toast.success("Login Success")
 
           // 🔥 Role-based redirect
           if (data.role === "ADMIN") {
@@ -51,7 +53,7 @@ const Login = () => {
       }
       // REGISTER
       else {
-        alert("Registered successfully!");
+        toast.error("Registered successfully!");
         setMode("login");
       }
 

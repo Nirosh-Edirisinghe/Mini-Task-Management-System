@@ -3,6 +3,7 @@ import { AppContext } from '../context/AppContext.jsx';
 import axios from "axios"
 import { ChevronDown, X } from "lucide-react";
 import { Listbox } from "@headlessui/react";
+import { toast } from 'react-toastify';
 
 const priorities = ["LOW", "MEDIUM", "HIGH"];
 const statusList = ["TODO", "IN_PROGRESS", "DONE"];
@@ -31,7 +32,7 @@ const AddTask = ({ setOpen }) => {
   // Add Task
   const handleAddTask = async () => {
     console.log(formData);
-    
+
 
     try {
 
@@ -46,8 +47,10 @@ const AddTask = ({ setOpen }) => {
       );
 
       if (data.success) {
-        alert("Task Added Successfully");
+        toast.success("Task Added Successfully")
         setOpen(false);
+      } else {
+        toast.error(data.message)
       }
 
     } catch (error) {

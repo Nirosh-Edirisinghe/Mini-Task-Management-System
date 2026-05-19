@@ -5,6 +5,7 @@ import Login from './pages/Login.jsx';
 import PrivateRoute from './auth/PrivateRoute .jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import AppLayout from './layouts/AppLayout.jsx';
+import { ToastContainer, toast } from 'react-toastify';
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           </Route>
         </Route>
       </Routes>
+      <ToastContainer/>
     </>
   )
 }
