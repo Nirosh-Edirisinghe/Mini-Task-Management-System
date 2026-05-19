@@ -206,7 +206,7 @@ const Login = () => {
               </div>
 
               {/* Button */}
-              <button className="w-full bg-cyan-700 hover:bg-cyan-800 text-white py-3 rounded-lg font-semibold transition duration-300 cursor-pointer">
+              <button className="w-full bg-cyan-500 hover:bg-cyan-800 text-white py-3 rounded-lg font-semibold transition duration-300 cursor-pointer">
                 {mode === "login"
                   ? isAdmin
                     ? "Admin Login"
