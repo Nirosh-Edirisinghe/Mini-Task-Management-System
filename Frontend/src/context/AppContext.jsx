@@ -9,6 +9,7 @@ const AppContextProvider = (props) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const token = user?.token;
   const [users, setUsers] = useState([]);
+  const [tasks, setTasks] = useState([])
 
   // Fetch All Users
   const fetchUsers = async () => {
@@ -29,14 +30,38 @@ const AppContextProvider = (props) => {
     }
   };
 
+  const fetchTasks = async () => {
+
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/task/get-tasks`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data.success) {
+        setTasks(data.tasks)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     if (token) {
       fetchUsers();
     }
   }, []);
 
+  useEffect(() => {
+    if (token) {
+      fetchTasks();
+    }
+  }, []);
+
   const value = {
-    backendUrl, token, users,fetchUsers
+    backendUrl, token, users, fetchUsers, tasks, fetchTasks, user
   }
 
   return (

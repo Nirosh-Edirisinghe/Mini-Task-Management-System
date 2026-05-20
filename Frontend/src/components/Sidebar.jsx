@@ -45,6 +45,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <LayoutDashboard size={18} />
               Dashboard
             </NavLink>
+
+            <NavLink
+              to="/team"
+              end
+              className={linkClass}
+              onClick={() => setSidebarOpen(false)}
+            >
+              <Users size={18} />
+              Team Members
+            </NavLink>
           </nav>
         </div>
       </aside>

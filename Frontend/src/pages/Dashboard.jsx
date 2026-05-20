@@ -3,8 +3,8 @@ import AddTask from '../components/AddTask';
 import { AppContext } from '../context/AppContext.jsx';
 
 const Dashboard = () => {
-  const { token} = useContext(AppContext)
-  const [open, setOpen] = useState(false);  
+  const { token, tasks} = useContext(AppContext)
+  const [open, setOpen] = useState(false);    
 
   return (
     <div className='flex flex-col h-scree'>

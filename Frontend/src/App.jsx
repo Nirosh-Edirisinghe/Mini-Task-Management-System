@@ -6,6 +6,7 @@ import PrivateRoute from './auth/PrivateRoute .jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import AppLayout from './layouts/AppLayout.jsx';
 import { ToastContainer, toast } from 'react-toastify';
+import TeamMembers from './pages/TeamMembers.jsx';
 
 function App() {
 
@@ -16,7 +17,7 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route element={<AppLayout />}>
             <Route path="/" element={<Dashboard />} />
-            {/* <Route path="/tasks" element={<Tasks />} /> */}
+            <Route path="/team" element={<TeamMembers />} />
           </Route>
         </Route>
       </Routes>

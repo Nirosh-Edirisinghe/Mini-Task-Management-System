@@ -33,7 +33,6 @@ const AddTask = ({ setOpen }) => {
   const handleAddTask = async () => {
     console.log(formData);
 
-
     try {
 
       const { data } = await axios.post(
