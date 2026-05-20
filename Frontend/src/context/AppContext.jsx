@@ -61,7 +61,7 @@ const AppContextProvider = (props) => {
   }, []);
 
   const value = {
-    backendUrl, token, users, fetchUsers, tasks, fetchTasks
+    backendUrl, token, users, fetchUsers, tasks, fetchTasks, user
   }
 
   return (
