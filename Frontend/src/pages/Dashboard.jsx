@@ -4,6 +4,7 @@ import { AppContext } from '../context/AppContext.jsx';
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import '../styles/calendar.css'
+import { formatStatus } from '../utils/formatData.js';
 
 const Dashboard = () => {
   const { token, tasks, user } = useContext(AppContext)
@@ -56,27 +57,25 @@ const Dashboard = () => {
 
         {/* Right - Tasks */}
         <div className="bg-white p-4 rounded-xl shadow md:col-span-2 h-80 flex flex-col">
-          <h2 className="font-semibold mb-3 text-slate-700">
+          <h2 className="font-semibold mb-3 text-slate-800">
             {user.role === "admin" ? "All Tasks" : "My Tasks"}
           </h2>
 
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto ">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left border-b">
+                <tr className="text-left border-b border-gray-300 text-slate-700 ">
                   <th className="py-2">Title</th>
                   <th>Status</th>
-                  <th>Priority</th>
                   <th>Due Date</th>
                 </tr>
               </thead>
 
               <tbody>
                 {displayTasks.map((task) => (
-                  <tr key={task._id} className="border-b">
+                  <tr key={task._id} className="border-b border-gray-300 text-slate-800">
                     <td className="py-2">{task.title}</td>
-                    <td>{task.status}</td>
-                    <td>{task.priority}</td>
+                    <td>{formatStatus(task.status)}</td>
                     <td>
                       {new Date(task.dueDate).toLocaleDateString()}
                     </td>
