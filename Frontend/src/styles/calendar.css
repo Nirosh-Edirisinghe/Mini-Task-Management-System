@@ -1,0 +1,52 @@
+/* Main calendar */
+.react-calendar {
+  width: 100%;
+  height: 70%;
+  border: none;
+  font-family: inherit;
+  background: white;
+   border-radius: 12px;
+}
+
+/* Navigation (month/year top bar) */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.react-calendar__navigation button {
+  background: none;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* Day tiles */
+.react-calendar__tile {
+  padding: 10px 0;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+/* Hover effect */
+.react-calendar__tile:hover {
+  background: #d1fae5;
+}
+
+/* Today */
+.react-calendar__tile--now {
+  background: #e0f2fe;
+  border-radius: 8px;
+}
+
+/* Selected date */
+.react-calendar__tile--active {
+  background: #10b981 !important;
+  color: white;
+  border-radius: 8px;
+}
+
+/* Weekend color */
+.react-calendar__month-view__days__day--weekend {
+  color: #ef4444;
+}
