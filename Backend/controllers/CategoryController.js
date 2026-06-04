@@ -25,8 +25,8 @@ const createCategory = async (req, res) => {
     //  Create category
     const category = await categoryModal.create({
       name,
-      users: users || [], 
-      createdBy: req.user.id, 
+      users: users || [],
+      createdBy: req.user.id,
     });
 
     // Populate users 
@@ -48,4 +48,26 @@ const createCategory = async (req, res) => {
   }
 };
 
-export {createCategory}
+// get categories
+const getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find()
+      .populate("users", "name email")
+      .populate("createdBy", "name");
+
+    res.status(200).json({
+      success: true,
+      count: categories.length,
+      categories,
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+export { createCategory, getCategories }
