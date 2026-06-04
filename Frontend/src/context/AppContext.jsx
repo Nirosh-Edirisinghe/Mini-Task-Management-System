@@ -10,6 +10,7 @@ const AppContextProvider = (props) => {
   const token = user?.token;
   const [users, setUsers] = useState([]);
   const [tasks, setTasks] = useState([])
+  const [categories, setCategories] = useState([])
 
   // Fetch All Users
   const fetchUsers = async () => {
@@ -48,6 +49,24 @@ const AppContextProvider = (props) => {
     }
   }
 
+  // get categories
+  const getCategory = async () => {
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/category/get-category`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      if (data.success) {
+        setCategories(data.categories)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     if (token) {
       fetchUsers();
@@ -57,11 +76,12 @@ const AppContextProvider = (props) => {
   useEffect(() => {
     if (token) {
       fetchTasks();
+      getCategory();
     }
   }, []);
 
   const value = {
-    backendUrl, token, users, fetchUsers, tasks, fetchTasks, user
+    backendUrl, token, users, fetchUsers, tasks, fetchTasks, user, categories, getCategory
   }
 
   return (

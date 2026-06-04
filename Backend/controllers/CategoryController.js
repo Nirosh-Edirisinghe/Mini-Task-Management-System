@@ -1,4 +1,4 @@
-import categoryModal from "../models/CategoryModal";
+import categoryModal from "../models/CategoryModal.js";
 
 // create category
 const createCategory = async (req, res) => {
