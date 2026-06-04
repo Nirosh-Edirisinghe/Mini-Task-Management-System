@@ -9,7 +9,6 @@ import AddCategoryModal from '../components/AddCategoryModal.jsx';
 
 const Dashboard = () => {
   const { token, tasks, user, categories } = useContext(AppContext)
-  console.log(tasks);
 
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -19,6 +18,14 @@ const Dashboard = () => {
     user?.role === "ADMIN"
       ? tasks?.allTasks || []
       : tasks?.myTask || [];
+
+  const recentTasks = [...displayTasks]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 6);
+
+  const recentTrackingTasks = (tasks?.myTracking || [])
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 5);
 
   return (
     <div className='flex flex-col h-screen gap-4 p-4'>
@@ -74,7 +81,7 @@ const Dashboard = () => {
               </thead>
 
               <tbody>
-                {displayTasks.map((task) => (
+                {recentTasks?.map((task) => (
                   <tr key={task._id} className="border-b border-gray-300 text-slate-800">
                     <td className="py-2">{task.title}</td>
                     <td>{formatStatus(task.status)}</td>
@@ -140,6 +147,37 @@ const Dashboard = () => {
             </button>
           </div>
 
+        </div>
+
+        {/* my tracking section */}
+        <div className="bg-white p-4 rounded-xl shadow md:col-span-2 h-60 flex flex-col">
+          <h2 className="font-semibold mb-3 text-slate-800">
+            My Tracking
+          </h2>
+
+          <div className="flex-1 overflow-y-auto ">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left border-b border-gray-300 text-slate-700 ">
+                  <th className="py-2">Title</th>
+                  <th>Status</th>
+                  <th>Due Date</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {recentTrackingTasks?.map((task) => (
+                  <tr key={task._id} className="border-b border-gray-300 text-slate-800">
+                    <td className="py-2">{task.title}</td>
+                    <td>{formatStatus(task.status)}</td>
+                    <td>
+                      {new Date(task.dueDate).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
