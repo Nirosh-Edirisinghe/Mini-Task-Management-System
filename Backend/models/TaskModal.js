@@ -36,6 +36,11 @@ const taskSchema = new mongoose.Schema(
       required: true
     },
 
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
@@ -43,7 +48,7 @@ const taskSchema = new mongoose.Schema(
     }
   },
   {
-    timestamps: true 
+    timestamps: true
   }
 );
 

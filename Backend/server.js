@@ -5,6 +5,7 @@ import connectDb from "./config/db.js"
 import userRouter from "./routes/AuthRoute.js"
 import usersRouter from "./routes/UserRoutes.js"
 import taskRouter from "./routes/TaskRoute.js"
+import categoryRouter from "./routes/CategoryRoute.js"
 
 // app config
 const app = express()
@@ -18,9 +19,10 @@ app.use(cors())
 connectDb();
 
 // api endpoint
-app.use('/api/auth',userRouter)
-app.use('/api/user',usersRouter)
-app.use('/api/task',taskRouter)
+app.use('/api/auth', userRouter)
+app.use('/api/user', usersRouter)
+app.use('/api/task', taskRouter)
+app.use('/api/category', categoryRouter)
 
 app.get('/', (req, res) => {
   res.send("API is running...")
