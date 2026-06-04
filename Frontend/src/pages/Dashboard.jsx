@@ -18,7 +18,7 @@ const Dashboard = () => {
   const displayTasks =
     user?.role === "ADMIN"
       ? tasks?.allTasks || []
-      : tasks?.myTracking || [];
+      : tasks?.myTask || [];
 
   return (
     <div className='flex flex-col h-screen gap-4 p-4'>
@@ -93,7 +93,7 @@ const Dashboard = () => {
       {/* Second ROW */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* category section */}
-        <div className="bg-white py-4 px-2 rounded-xl shadow md:col-span-1 h-80 flex flex-col">
+        <div className="bg-white py-4 px-2 rounded-xl shadow md:col-span-1 h-60 flex flex-col">
           <h2 className="font-semibold mb-3 text-slate-900 px-2">Categories</h2>
           <hr className='text-gray-300 mb-2' />
 
@@ -108,7 +108,7 @@ const Dashboard = () => {
               categories.map((cat) => (
                 <div
                   key={cat._id}
-                  className="flex justify-between border-b border-gray-300 px-2 py-1"
+                  className="flex justify-between border-b border-gray-200 px-2 py-1"
                 >
                   <p className="text-sm text-slate-700">
                     {cat.name}
