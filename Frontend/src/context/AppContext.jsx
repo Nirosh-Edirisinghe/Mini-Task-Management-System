@@ -70,7 +70,7 @@ const AppContextProvider = (props) => {
   useEffect(() => {
     if (token) {
       fetchUsers();
-    }
+    }    
   }, []);
 
   useEffect(() => {

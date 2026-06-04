@@ -51,7 +51,7 @@ const createCategory = async (req, res) => {
 // get categories
 const getCategories = async (req, res) => {
   try {
-    const categories = await Category.find()
+    const categories = await categoryModal.find()
       .populate("users", "name email")
       .populate("createdBy", "name");
 
