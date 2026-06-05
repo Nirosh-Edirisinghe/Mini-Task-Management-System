@@ -11,6 +11,7 @@ const AppContextProvider = (props) => {
   const [users, setUsers] = useState([]);
   const [tasks, setTasks] = useState([])
   const [categories, setCategories] = useState([])
+  const [userData, setUserData] = useState(null);
 
   // Fetch All Users
   const fetchUsers = async () => {
@@ -67,21 +68,42 @@ const AppContextProvider = (props) => {
     }
   }
 
+  // fetchuserdata
+  const fetchUserData = async () => {
+    try {
+      const { data } = await axios.get(
+        `${backendUrl}/api/user/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data.success) {
+        setUserData(data.user);
+            
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (token) {
       fetchUsers();
-    }    
+    }
   }, []);
 
   useEffect(() => {
     if (token) {
       fetchTasks();
       getCategory();
+      fetchUserData();
     }
-  }, []);
+  }, [token]);
 
   const value = {
-    backendUrl, token, users, fetchUsers, tasks, fetchTasks, user, categories, getCategory
+    backendUrl, token, users, fetchUsers, tasks, fetchTasks, user, categories, getCategory, userData, fetchUserData
   }
 
   return (
