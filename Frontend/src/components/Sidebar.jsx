@@ -55,6 +55,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <Users size={18} />
               Team Members
             </NavLink>
+
+            <NavLink
+              to="/profile"
+              end
+              className={linkClass}
+              onClick={() => setSidebarOpen(false)}
+            >
+              <Users size={18} />
+              Profile
+            </NavLink>
           </nav>
         </div>
       </aside>

@@ -8,11 +8,14 @@ import { formatStatus } from '../utils/formatData.js';
 import AddCategoryModal from '../components/AddCategoryModal.jsx';
 
 const Dashboard = () => {
-  const { token, tasks, user, categories } = useContext(AppContext)
+  const { token, tasks, user, categories, userData } = useContext(AppContext)
 
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const [catOpen, setCatOpen] = useState(false)
+
+  console.log(userData);
+  
 
   const displayTasks =
     user?.role === "ADMIN"
@@ -28,7 +31,7 @@ const Dashboard = () => {
     .slice(0, 5);
 
   return (
-    <div className='flex flex-col h-screen gap-4 p-4'>
+    <div className='flex flex-col gap-4 px-4 py-1'>
       {/* Header */}
       <div className='flex justify-between items-center bg-white rounded-xl py-2 px-4 shadow'>
         {/* Left Side */}

@@ -8,7 +8,7 @@ const TeamMembers = () => {
   const { user } = useContext(AppContext)
   const [userOpen, setUserOpen] = useState(false)
   return (
-    <div className='className="px-1 py-6 sm:p-6 min-h-screen bg-white rounded-xl'>
+    <div className='px-1 py-6 sm:p-6 min-h-screen bg-white rounded-xl'>
 
       {/* header */}
       <div className='flex justify-between items-center'>
