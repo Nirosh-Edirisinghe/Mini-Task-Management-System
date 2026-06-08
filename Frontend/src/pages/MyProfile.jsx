@@ -10,10 +10,11 @@ const MyProfile = () => {
 
   const { userData, backendUrl, token, fetchUserData } = useContext(AppContext)
   const fileInputRef = useRef(null);
-  console.log(userData);
 
   const [profileImage, setProfileImage] = useState(profile_placeholder);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [newEmail, setNewEmail] = useState("");
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
 
   // image upload
   const handleImageUpload = (e) => {
@@ -56,10 +57,41 @@ const MyProfile = () => {
     }
   };
 
+  // email update
+  const handleEmailUpdate = async () => {
+    try {
+      const { data } = await axios.put(
+        `${backendUrl}/api/user/update-email`,
+        { email: newEmail },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        await fetchUserData();
+        setIsEditingEmail(false);
+        console.log("Email updated");
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // sync backend image
   useEffect(() => {
     if (userData?.image) {
       setProfileImage(userData.image);
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (userData?.email) {
+      setNewEmail(userData.email);
     }
   }, [userData]);
 
@@ -155,19 +187,53 @@ const MyProfile = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <p className="text-blue-400 underline">
-              {userData?.email}
-            </p>
+            {isEditingEmail ? (
+              <input
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                className="border px-3 py-2 rounded w-full sm:w-auto"
+              />
+            ) : (
+              <p className="text-blue-400 underline">
+                {userData?.email}
+              </p>
+            )}
 
-            <button className="border border-gray-700 text-gray-800 rounded-full px-6 py-2 hover:bg-slate-50">
-              Change email address
-            </button>
+            {/* BUTTONS */}
+            <div className="flex gap-3">
+              {isEditingEmail ? (
+                <>
+                  <button
+                    onClick={() => setIsEditingEmail(false)}
+                    className="px-4 py-2 border rounded-full"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    onClick={handleEmailUpdate}
+                    className="px-4 py-2 bg-emerald-500 text-white rounded-full"
+                  >
+                    Save
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setIsEditingEmail(true)}
+                  className="border border-gray-700 text-gray-800 rounded-full px-6 py-2 hover:bg-slate-50"
+                >
+                  Change email address
+                </button>
+              )}
+            </div>
+
           </div>
         </div>
 
         {/* Actions */}
         <div className="grid md:grid-cols-[200px_1fr] gap-6 py-4">
-          
+
           <div className="hidden md:block"></div>
 
           <div className="px-6 py-4 flex flex-wrap gap-4 justify-start">

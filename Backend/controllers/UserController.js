@@ -66,7 +66,7 @@ const createUser = async (req, res) => {
 }
 
 // get user data
- const getUserProfile = async (req, res) => {
+const getUserProfile = async (req, res) => {
   try {
     const user = await userModel
       .findById(req.user.id)
@@ -118,7 +118,7 @@ const updateUserProfile = async (req, res) => {
       {
         image: imageUrl,
       },
-      { new: true }
+      { returnDocument: "after" }
     );
 
     res.json({
@@ -137,4 +137,47 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-export { getAllUsers, createUser, getUserProfile, updateUserProfile }
+// update user email
+const updateUserEmail = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { email } = req.body;
+
+    if (!email) {
+      return res.json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    // check if email already exists
+    const existingUser = await userModel.findOne({ email });
+
+    if (existingUser) {
+      return res.json({
+        success: false,
+        message: "Email already in use",
+      });
+    }
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      { email },
+      { new: true }
+    ).select("-password");
+
+    res.json({
+      success: true,
+      message: "Email updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+export { getAllUsers, createUser, getUserProfile, updateUserProfile, updateUserEmail }
