@@ -64,11 +64,11 @@ const getTasks = async (req, res) => {
     const populateFields = [
       {
         path: "assignedTo",
-        select: "name email role",
+        select: "name email role image",
       },
       {
         path: "createdBy",
-        select: "name email role",
+        select: "name email role image",
       },
     ];
 
