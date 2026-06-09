@@ -14,13 +14,11 @@ const Dashboard = () => {
   const [date, setDate] = useState(new Date());
   const [catOpen, setCatOpen] = useState(false)
 
-  console.log(userData);
-  
 
   const displayTasks =
     user?.role === "ADMIN"
       ? tasks?.allTasks || []
-      : tasks?.myTask || [];
+      : tasks?.myTasks || [];
 
   const recentTasks = [...displayTasks]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

@@ -10,7 +10,7 @@ const statusList = ["TODO", "IN_PROGRESS", "DONE"];
 
 const AddTask = ({ setOpen }) => {
 
-  const { backendUrl, token, users } = useContext(AppContext);
+  const { backendUrl, token, users, categories } = useContext(AppContext);
   const [task, setTask] = useState("");
   const [formData, setFormData] = useState({
     title: "",
@@ -19,7 +19,15 @@ const AddTask = ({ setOpen }) => {
     status: "TODO",
     dueDate: "",
     assignedTo: "",
+    category: ""
   });
+
+  // filter user
+  const selectedCategory = categories.find(
+    (cat) => cat._id === formData.category
+  );
+
+  const filteredUsers = selectedCategory?.users || [];
 
   // Handle Input Change
   const handleChange = (e) => {
@@ -235,6 +243,79 @@ const AddTask = ({ setOpen }) => {
             />
           </div>
 
+          {/* category */}
+          <div className="mb-3">
+            <label className="block text-sm font-medium mb-1 text-slate-700">
+              Select Category
+            </label>
+
+            <Listbox
+              value={formData.category}
+              onChange={(value) =>
+                setFormData({
+                  ...formData,
+                  category: value,
+                  assignedTo: "", // reset user when category changes
+                })
+              }
+            >
+              {({ open }) => {
+                const selectedCategory = categories.find(
+                  (cat) => cat._id === formData.category
+                );
+
+                return (
+                  <div className="relative">
+
+                    {/* Button */}
+                    <Listbox.Button
+                      className="w-full border border-gray-300 focus:outline-none focus:ring-1 focus:ring-emerald-100 rounded-md px-3 py-2 text-left flex items-center justify-between text-slate-600 bg-white"
+                    >
+                      <span>
+                        {selectedCategory
+                          ? selectedCategory.name
+                          : "Select Category"}
+                      </span>
+
+                      <ChevronDown
+                        size={18}
+                        className={`stroke-gray-500 transition-transform ${open ? "rotate-180" : ""
+                          }`}
+                      />
+                    </Listbox.Button>
+
+                    {/* Options */}
+                    <Listbox.Options
+                      className="absolute mt-1 w-full border border-gray-300 bg-white shadow-lg rounded-md z-10 overflow-hidden max-h-60 overflow-y-auto"
+                    >
+                      {categories.length > 0 ? (
+                        categories.map((cat) => (
+                          <Listbox.Option
+                            key={cat._id}
+                            value={cat._id}
+                            className={({ active }) =>
+                              `cursor-pointer px-3 py-2 transition ${active
+                                ? "bg-emerald-100 text-emerald-700"
+                                : "text-gray-700"
+                              }`
+                            }
+                          >
+                            {cat.name}
+                          </Listbox.Option>
+                        ))
+                      ) : (
+                        <div className="px-3 py-2 text-gray-400 text-sm">
+                          No categories found
+                        </div>
+                      )}
+                    </Listbox.Options>
+
+                  </div>
+                );
+              }}
+            </Listbox>
+          </div>
+
           {/* Assign User */}
           <div className="mb-3">
             <label className="block text-sm font-medium mb-1 text-slate-700">
@@ -279,19 +360,25 @@ const AddTask = ({ setOpen }) => {
                     <Listbox.Options
                       className="absolute mt-1 w-full border border-gray-300 bg-white shadow-lg rounded-md z-10 overflow-hidden max-h-60 overflow-y-auto"
                     >
-                      {users.map((user) => (
-                        <Listbox.Option
-                          key={user._id}
-                          value={user._id}
-                          className={({ active }) =>
-                            `cursor-pointer px-3 py-1 transition ${active
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "text-gray-700"}`
-                          }
-                        >
-                          {user.name}
-                        </Listbox.Option>
-                      ))}
+                      {filteredUsers.length > 0 ? (
+                        filteredUsers.map((user) => (
+                          <Listbox.Option
+                            key={user._id}
+                            value={user._id}
+                            className={({ active }) =>
+                              `cursor-pointer px-3 py-1 transition ${active
+                                ? "bg-emerald-100 text-emerald-700"
+                                : "text-gray-700"}`
+                            }
+                          >
+                            {user.name}
+                          </Listbox.Option>
+                        ))) : (
+                        <div className="px-3 py-2 text-gray-400 text-sm">
+                          No users in this category
+                        </div>
+                      )
+                      }
                     </Listbox.Options>
 
                   </div>

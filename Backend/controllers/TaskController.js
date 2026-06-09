@@ -10,12 +10,13 @@ const createTask = async (req, res) => {
       priority,
       dueDate,
       assignedTo,
+      category
     } = req.body;
 
     const createdBy = req.user._id; 
 
     // validation (basic)
-    if (!title || !description || !dueDate || !assignedTo) {
+    if (!title || !description || !dueDate || !assignedTo || !category) {
       return res.status(400).json({
         success: false,
         message: "Required fields missing",
@@ -29,6 +30,7 @@ const createTask = async (req, res) => {
       priority,
       dueDate,
       assignedTo,
+      category,
       createdBy,
     });
 
@@ -62,11 +64,11 @@ const getTasks = async (req, res) => {
     const populateFields = [
       {
         path: "assignedTo",
-        select: "name email role",
+        select: "name email role image",
       },
       {
         path: "createdBy",
-        select: "name email role",
+        select: "name email role image",
       },
     ];
 
