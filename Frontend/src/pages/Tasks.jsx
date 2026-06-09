@@ -129,7 +129,7 @@ const Tasks = () => {
               {filteredTasks.map((task) => (
                 <tr
                   key={task._id}
-                  className="border-b border-gray-200 text-slate-700"
+                  className="border-b border-gray-200 text-slate-700 text-sm"
                 >
 
                   {/* TITLE */}
@@ -141,11 +141,11 @@ const Tasks = () => {
                   {/* PRIORITY */}
                   <td className="p-3">
                     <span
-                      className={`px-2 py-1 text-xs rounded ${task.priority === "HIGH"
-                        ? "bg-red-100 text-red-600"
+                      className={`px-2 py-1 text-xs rounded-full ${task.priority === "HIGH"
+                        ? "bg-red-200 text-red-600"
                         : task.priority === "MEDIUM"
-                          ? "bg-yellow-100 text-yellow-600"
-                          : "bg-green-100 text-green-600"
+                          ? "bg-yellow-200 text-yellow-600"
+                          : "bg-green-200 text-green-600"
                         }`}
                     >
                       {task.priority}
