@@ -8,6 +8,7 @@ import AppLayout from './layouts/AppLayout.jsx';
 import { ToastContainer, toast } from 'react-toastify';
 import TeamMembers from './pages/TeamMembers.jsx';
 import MyProfile from './pages/MyProfile.jsx';
+import Tasks from './pages/Tasks.jsx';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/team" element={<TeamMembers />} />
             <Route path="/profile" element={<MyProfile />} />
+            <Route path="/task" element={<Tasks />} />
           </Route>
         </Route>
       </Routes>

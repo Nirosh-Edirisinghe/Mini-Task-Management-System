@@ -47,6 +47,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             </NavLink>
 
             <NavLink
+              to="/task"
+              end
+              className={linkClass}
+              onClick={() => setSidebarOpen(false)}
+            >
+              <Users size={18} />
+              Tasks
+            </NavLink>
+
+            <NavLink
               to="/team"
               end
               className={linkClass}
