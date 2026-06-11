@@ -128,7 +128,10 @@ const getSingleTask = async (req, res) => {
     const { id } = req.params;
 
     // find task by ID
-    const task = await taskModel.findById(id);
+    const task = await taskModel.findById(id)
+      .populate("assignedTo", "name email image")
+      .populate("createdBy", "name email image")
+      .populate("category");
 
     if (!task) {
       return res.json({
