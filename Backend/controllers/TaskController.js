@@ -13,7 +13,7 @@ const createTask = async (req, res) => {
       category
     } = req.body;
 
-    const createdBy = req.user._id; 
+    const createdBy = req.user._id;
 
     // validation (basic)
     if (!title || !description || !dueDate || !assignedTo || !category) {
@@ -122,4 +122,32 @@ const getTasks = async (req, res) => {
   }
 };
 
-export {createTask, getTasks}
+// get singal task
+const getSingleTask = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // find task by ID
+    const task = await taskModel.findById(id);
+
+    if (!task) {
+      return res.json({
+        success: false,
+        message: "Task not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      task,
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+export { createTask, getTasks, getSingleTask }
