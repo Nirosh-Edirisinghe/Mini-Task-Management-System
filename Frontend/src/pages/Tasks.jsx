@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { AppContext } from '../context/AppContext'
 import { ChevronDown } from 'lucide-react';
+import TaskCard from '../components/TaskCard';
+import { useNavigate } from 'react-router-dom';
 
 
 const priorityOptions = [
@@ -14,6 +16,7 @@ const Tasks = () => {
   const { tasks, user } = useContext(AppContext)
 
   const dropdownRef = useRef();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [priority, setPriority] = useState("ALL");
   const [priorityOpen, setPriorityOpen] = useState(false);
@@ -111,78 +114,105 @@ const Tasks = () => {
         </div>
 
         {/* task section */}
-        <div className="mt-6 mx-2 md:mx-4 overflow-x-auto rounded-xl shadow-xl">
-          <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
+        <div className="mt-6 mx-2 md:mx-4">
 
-            {/* HEAD */}
-            <thead className="bg-gray-100 text-left text-sm text-gray-600">
-              <tr>
-                <th className="p-3">Title</th>
-                <th className="p-3">Status</th>
-                <th className="p-3">Priority</th>
-                <th className="p-3">Assigned To</th>
-              </tr>
-            </thead>
+          <div className=" hidden md:block overflow-x-auto rounded-xl shadow-xl">
+            <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
 
-            {/* BODY */}
-            <tbody>
-              {filteredTasks.map((task) => (
-                <tr
-                  key={task._id}
-                  className="border-b border-gray-200 text-slate-700 text-sm"
-                >
+              {/* HEAD */}
+              <thead className="bg-gray-100 text-left text-sm text-gray-600">
+                <tr>
+                  <th className="p-3">Title</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Priority</th>
+                  <th className="p-3">Due date</th>
+                  <th className="p-3">Assigned To</th>
+                </tr>
+              </thead>
 
-                  {/* TITLE */}
-                  <td className="p-3">{task.title}</td>
+              {/* BODY */}
+              <tbody>
+                {filteredTasks.map((task) => (
+                  <tr
+                    key={task._id}
+                    onClick={() => navigate(`/task/${task._id}`)}
+                    className="border-b border-gray-200 text-slate-700 text-sm"
+                  >
 
-                  {/* STATUS */}
-                  <td className="p-3">{task.status.replace("_", " ").toLowerCase()}</td>
+                    {/* TITLE */}
+                    <td className="p-3">{task.title}</td>
 
-                  {/* PRIORITY */}
-                  <td className="p-3">
-                    <span
-                      className={`px-2 py-1 text-xs rounded-full ${task.priority === "HIGH"
+                    {/* STATUS */}
+                    <td className="p-3">
+                      <span className={`px-2 py-1 text-xs rounded-full ${task.status === "TODO"
                         ? "bg-red-200 text-red-600"
-                        : task.priority === "MEDIUM"
+                        : task.priority === "IN_PROGRESS"
                           ? "bg-yellow-200 text-yellow-600"
                           : "bg-green-200 text-green-600"
-                        }`}
-                    >
-                      {task.priority}
-                    </span>
-                  </td>
-
-                  {/* ASSIGNED TO */}
-                  <td className="p-3">
-                    <div className="flex items-center gap-2">
-
-                      <img
-                        src={
-                          task.assignedTo?.image ||
-                          "https://i.pravatar.cc/40"
-                        }
-                        alt={task.assignedTo?.name}
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
-
-                      <span>
-                        {task.assignedTo?.name}
-
-                        {task.assignedTo?._id === user?._id && (
-                          <span className="ml-1 text-gray-500 text-sm">
-                            (me)
-                          </span>
-                        )}
+                        }`}>
+                        {task.status.replace("_", " ").toLowerCase()}
                       </span>
+                    </td>
 
-                    </div>
-                  </td>
+                    {/* PRIORITY */}
+                    <td className="p-3">
+                      <span
+                        className="px-2 py-1 text-xs rounded-full bg-gray-200 "
+                      >
+                        {task.priority}
+                      </span>
+                    </td>
 
-                </tr>
-              ))}
-            </tbody>
+                    {/* Due date */}
+                    <td className="p-3">
+                      {task.dueDate
+                        ? new Date(task.dueDate).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })
+                        : "No due date"}
+                    </td>
 
-          </table>
+                    {/* ASSIGNED TO */}
+                    <td className="p-3">
+                      <div className="flex items-center gap-2">
+
+                        <img
+                          src={
+                            task.assignedTo?.image ||
+                            "https://i.pravatar.cc/40"
+                          }
+                          alt={task.assignedTo?.name}
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+
+                        <span>
+                          {task.assignedTo?.name}
+
+                          {task.assignedTo?._id === user?._id && (
+                            <span className="ml-1 text-gray-500 text-sm">
+                              (me)
+                            </span>
+                          )}
+                        </span>
+
+                      </div>
+                    </td>
+
+                  </tr>
+                ))}
+              </tbody>
+
+            </table>
+          </div>
+
+          {/* 🔷 MOBILE CARD VIEW */}
+          <div className="md:hidden space-y-4">
+            {filteredTasks.map((task) => (
+              <TaskCard key={task._id} task={task} user={user} />
+            ))}
+          </div>
         </div>
 
       </div>
