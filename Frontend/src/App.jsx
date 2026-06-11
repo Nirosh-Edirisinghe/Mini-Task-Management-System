@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import TeamMembers from './pages/TeamMembers.jsx';
 import MyProfile from './pages/MyProfile.jsx';
 import Tasks from './pages/Tasks.jsx';
+import TaskDetails from './pages/TaskDetails.jsx';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
             <Route path="/team" element={<TeamMembers />} />
             <Route path="/profile" element={<MyProfile />} />
             <Route path="/task" element={<Tasks />} />
+            <Route path="/task/:id" element={<TaskDetails />} />
           </Route>
         </Route>
       </Routes>

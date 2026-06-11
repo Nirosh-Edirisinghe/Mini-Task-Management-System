@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { AppContext } from '../context/AppContext'
 import { ChevronDown } from 'lucide-react';
 import TaskCard from '../components/TaskCard';
+import { useNavigate } from 'react-router-dom';
 
 
 const priorityOptions = [
@@ -15,6 +16,7 @@ const Tasks = () => {
   const { tasks, user } = useContext(AppContext)
 
   const dropdownRef = useRef();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [priority, setPriority] = useState("ALL");
   const [priorityOpen, setPriorityOpen] = useState(false);
@@ -133,6 +135,7 @@ const Tasks = () => {
                 {filteredTasks.map((task) => (
                   <tr
                     key={task._id}
+                    onClick={() => navigate(`/task/${task._id}`)}
                     className="border-b border-gray-200 text-slate-700 text-sm"
                   >
 
