@@ -1,12 +1,18 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import UpdateTask from "../components/UpdateTask";
+import DeleteConfirmModal from "../components/DeleteConfirmModal";
+import { toast } from "react-toastify";
 
 const TaskDetails = () => {
-  const { backendUrl, token, user } = useContext(AppContext)
+  const { backendUrl, token, user, fetchTasks } = useContext(AppContext)
   const { id } = useParams(); // get task id
   const [task, setTask] = useState(null);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchTask();
@@ -23,10 +29,38 @@ const TaskDetails = () => {
       );
       if (data.success) {
         setTask(data.task);
-        console.log(data.task);
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  // delete task
+  const handleDeleteTask = async () => {
+    try {
+      const { data } = await axios.delete(
+        `${backendUrl}/api/task/delete/${task._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+
+        await fetchTasks();
+
+        setOpenDelete(false);
+
+        navigate("/task");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete task");
     }
   };
 
@@ -36,8 +70,26 @@ const TaskDetails = () => {
     <>
       <div className='py-6 px-4 sm:px-6 min-h-screen bg-white rounded-xl'>
         {/* Header */}
-        <div className="p-4">
-          <h2 className="text-3xl font-bold text-slate-700">View Task</h2>
+        <div className="p-4 flex justify-between items-center">
+          <div>
+            <h2 className="text-3xl font-bold text-slate-700">View Task</h2>
+          </div>
+
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={() => setOpenUpdate(true)}
+              className="bg-emerald-400 text-white px-4 py-2 rounded-lg hover:bg-emerald-500 cursor-pointer"
+            >
+              Update Task
+            </button>
+
+            <button
+              onClick={() => setOpenDelete(true)}
+              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 cursor-pointer"
+            >
+              Delete Task
+            </button>
+          </div>
         </div>
         <hr className="text-gray-300" />
 
@@ -62,7 +114,7 @@ const TaskDetails = () => {
             <p className="text-gray-800">
               <span className={`px-2 py-1 text-xs rounded-full ${task.status === "TODO"
                 ? "bg-red-200 text-red-600"
-                : task.priority === "IN_PROGRESS"
+                : task.status === "IN_PROGRESS"
                   ? "bg-yellow-200 text-yellow-600"
                   : "bg-green-200 text-green-600"
                 }`}>
@@ -122,6 +174,28 @@ const TaskDetails = () => {
           </div>
         </div>
       </div>
+      {
+        openUpdate && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <UpdateTask
+              task={task}
+              setOpen={setOpenUpdate}
+              fetchTask={fetchTask}
+            />
+          </div>
+        )
+      }
+
+      {
+        openDelete && (
+          <DeleteConfirmModal
+            title="Delete Task"
+            message={`Are you sure you want to delete "${task.title}"?`}
+            onConfirm={handleDeleteTask}
+            onCancel={() => setOpenDelete(false)}
+          />
+        )
+      }
     </>
   );
 };
