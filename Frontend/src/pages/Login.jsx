@@ -34,7 +34,7 @@ const Login = () => {
         url = `${backendUrl}/api/auth/login`;
       }
 
-      const { data } = await axios.post(url, form);
+      const { data } = await axios.post(url, form);      
 
       // LOGIN
       if (mode === "login") {

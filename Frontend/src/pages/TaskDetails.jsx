@@ -2,11 +2,13 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import UpdateTask from "../components/UpdateTask";
 
 const TaskDetails = () => {
   const { backendUrl, token, user } = useContext(AppContext)
   const { id } = useParams(); // get task id
   const [task, setTask] = useState(null);
+  const [openUpdate, setOpenUpdate] = useState(false);
 
   useEffect(() => {
     fetchTask();
@@ -23,7 +25,6 @@ const TaskDetails = () => {
       );
       if (data.success) {
         setTask(data.task);
-        console.log(data.task);
       }
     } catch (err) {
       console.error(err);
@@ -36,8 +37,25 @@ const TaskDetails = () => {
     <>
       <div className='py-6 px-4 sm:px-6 min-h-screen bg-white rounded-xl'>
         {/* Header */}
-        <div className="p-4">
-          <h2 className="text-3xl font-bold text-slate-700">View Task</h2>
+        <div className="p-4 flex justify-between items-center">
+          <div>
+            <h2 className="text-3xl font-bold text-slate-700">View Task</h2>
+          </div>
+
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={() => setOpenUpdate(true)}
+              className="bg-emerald-400 text-white px-4 py-2 rounded-lg hover:bg-emerald-500 cursor-pointer"
+            >
+              Update Task
+            </button>
+
+            <button
+              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 cursor-pointer"
+            >
+              Delete Task
+            </button>
+          </div>
         </div>
         <hr className="text-gray-300" />
 
@@ -62,7 +80,7 @@ const TaskDetails = () => {
             <p className="text-gray-800">
               <span className={`px-2 py-1 text-xs rounded-full ${task.status === "TODO"
                 ? "bg-red-200 text-red-600"
-                : task.priority === "IN_PROGRESS"
+                : task.status === "IN_PROGRESS"
                   ? "bg-yellow-200 text-yellow-600"
                   : "bg-green-200 text-green-600"
                 }`}>
@@ -122,6 +140,17 @@ const TaskDetails = () => {
           </div>
         </div>
       </div>
+      {
+        openUpdate && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <UpdateTask
+              task={task}
+              setOpen={setOpenUpdate}
+              fetchTask={fetchTask}
+            />
+          </div>
+        )
+      }
     </>
   );
 };

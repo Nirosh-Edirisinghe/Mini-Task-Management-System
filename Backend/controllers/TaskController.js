@@ -153,4 +153,28 @@ const getSingleTask = async (req, res) => {
   }
 };
 
-export { createTask, getTasks, getSingleTask }
+// update task
+const updateTask = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedTask = await taskModel.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      task: updatedTask,
+    });
+
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export { createTask, getTasks, getSingleTask, updateTask }

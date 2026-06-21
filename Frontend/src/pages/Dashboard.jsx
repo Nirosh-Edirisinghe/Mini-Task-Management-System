@@ -68,7 +68,7 @@ const Dashboard = () => {
         {/* Right - Tasks */}
         <div className="bg-white p-4 rounded-xl shadow md:col-span-2 h-80 flex flex-col">
           <h2 className="font-semibold mb-3 text-slate-800">
-            {user.role === "ADMIN" ? "All Tasks" : "My Tasks"}
+            {user?.role === "ADMIN" ? "All Tasks" : "My Tasks"}
           </h2>
 
           <div className="flex-1 overflow-y-auto ">
