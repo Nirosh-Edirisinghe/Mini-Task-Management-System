@@ -1,14 +1,18 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import UpdateTask from "../components/UpdateTask";
+import DeleteConfirmModal from "../components/DeleteConfirmModal";
+import { toast } from "react-toastify";
 
 const TaskDetails = () => {
-  const { backendUrl, token, user } = useContext(AppContext)
+  const { backendUrl, token, user, fetchTasks } = useContext(AppContext)
   const { id } = useParams(); // get task id
   const [task, setTask] = useState(null);
   const [openUpdate, setOpenUpdate] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchTask();
@@ -28,6 +32,35 @@ const TaskDetails = () => {
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  // delete task
+  const handleDeleteTask = async () => {
+    try {
+      const { data } = await axios.delete(
+        `${backendUrl}/api/task/delete/${task._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+
+        await fetchTasks();
+
+        setOpenDelete(false);
+
+        navigate("/task");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete task");
     }
   };
 
@@ -51,6 +84,7 @@ const TaskDetails = () => {
             </button>
 
             <button
+              onClick={() => setOpenDelete(true)}
               className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 cursor-pointer"
             >
               Delete Task
@@ -149,6 +183,17 @@ const TaskDetails = () => {
               fetchTask={fetchTask}
             />
           </div>
+        )
+      }
+
+      {
+        openDelete && (
+          <DeleteConfirmModal
+            title="Delete Task"
+            message={`Are you sure you want to delete "${task.title}"?`}
+            onConfirm={handleDeleteTask}
+            onCancel={() => setOpenDelete(false)}
+          />
         )
       }
     </>
